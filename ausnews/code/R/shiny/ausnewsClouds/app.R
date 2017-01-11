@@ -15,7 +15,11 @@ library(stringr)
 library(tm)
 
 source_to_headlines <- function(base_url) {
-  headlines <- read_html(base_url) %>% html_nodes("h3.story__headline") %>% html_text()
+  if(base_url == "https://www.theguardian.com/au") {
+    headlines <- read_html(base_url) %>% html_nodes("div.fc-item__header") %>% html_text()
+  } else {
+    headlines <- read_html(base_url) %>% html_nodes("h3.story__headline") %>% html_text()
+  }
   # now lots of ugly munging to get to bare words
   headlines <- gsub("\\n+", "", headlines)
   headlines <- gsub("\\.$", "", headlines)
@@ -63,6 +67,7 @@ ui <- fluidPage(
                       "Canberra Times" = "http://www.canberratimes.com.au/",
                       "Sydney Morning Herald" = "http://www.smh.com.au",
                       "The Age" = "http://www.theage.com.au",
+                      "Guardian Australia" = "https://www.theguardian.com/au",
                       "WA Today" = "http://www.watoday.com.au/"), selected = "http://www.smh.com.au"
                      ),
          sliderInput("minfreq",
