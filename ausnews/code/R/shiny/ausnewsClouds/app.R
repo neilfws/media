@@ -50,7 +50,7 @@ count_words <- function(words) {
 ui <- fluidPage(
    
    # Application title
-   titlePanel("Fairfax News Word Clouds"),
+   titlePanel("Australian News Word Clouds"),
    
    # Sidebar with a slider input for min words
    sidebarLayout(
@@ -72,7 +72,7 @@ ui <- fluidPage(
       
       # Show a plot
       mainPanel(
-         plotOutput("smhWords")
+         plotOutput("wordCloud")
       )
    )
 )
@@ -81,14 +81,14 @@ ui <- fluidPage(
 server <- function(input, output) {
   
   observe({
-    smh <- fairfax_to_headlines(input$publication)
-    smh.words <- headlines_to_words(unique(smh))
-    smh.wc <- count_words(smh.words)
+    headlines <- fairfax_to_headlines(input$publication)
+    headlines.words <- headlines_to_words(unique(headlines))
+    words.wc <- count_words(headlines.words)
     pal2 <- brewer.pal(8, "Dark2")
   
-    output$smhWords <- renderPlot({
+    output$wordCloud <- renderPlot({
       # generate wordcloud
-     wordcloud(smh.wc$word, smh.wc$count, scale = c(8, .2), min.freq = input$minfreq, max.words = 200, random.order = FALSE, rot.per = .15, colors = pal2)
+     wordcloud(words.wc$word, words.wc$count, scale = c(8, .2), min.freq = input$minfreq, max.words = 200, random.order = FALSE, rot.per = .15, colors = pal2)
    }, width = 1024, height = 1024)
   }
 )
