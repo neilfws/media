@@ -1,0 +1,138 @@
+---
+title: "Is TWiV getting longer?"
+author: "Neil Saunders"
+date: "compiled `r Sys.time()`"
+output: 
+  html_document: 
+    keep_md: yes
+    number_sections: yes
+    toc: yes
+    toc_float: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, cache = FALSE, message = FALSE, warning = FALSE, fig.path = "../../figures/")
+library(tidyverse)
+library(lubridate)
+library(rvest)
+library(ggridges)
+library(tidytext)
+library(wordcloud)
+library(knitr)
+
+theme_set(theme_bw())
+```
+
+# Introduction
+Is science podcast [This Week In Virology](http://www.microbe.tv/twiv/) getting longer? And some other TWiV trivia.
+
+# Get the XML
+Data for every podcast episode is contained in [the RSS feed](http://twiv.microbeworld.libsynpro.com/twiv). RSS is XML, so reading it into R is very easy. Details for each episode are found in the `item` nodes.
+
+```{r get-data}
+twiv <- read_xml("http://twiv.microbeworld.libsynpro.com/twiv") %>%
+  xml_nodes("item")
+```
+
+# Make the data frame
+There is sure to be a clever and elegant way to map straight into a data frame using _e.g._ `purrr`. This is not that way.
+
+- `pubDate` is converted to date-time
+- `enclosure length` (bytes) is converted to numeric values
+- `duration` is pre-pended with "00" where hours are absent, then converted to seconds as numeric values
+
+```{r parse-data}
+twiv_df <- data.frame(pubDate = twiv %>% xml_nodes("pubDate") %>% xml_text(),
+                      title = twiv %>% xml_nodes("title") %>% xml_text(),
+                      encLength = twiv %>% xml_nodes("enclosure") %>% xml_attr("length"),
+                      duration = twiv %>% xml_nodes("itunes\\:duration") %>% xml_text(),
+                      stringsAsFactors = FALSE)
+
+# fix the date/time
+twiv_df <- twiv_df %>%
+  mutate(pubDate = as.POSIXct(strptime(pubDate, "%a, %d %b %Y %H:%M:%S +0000")))
+
+# fix the duration
+twiv_df <- twiv_df %>%
+  mutate(encLength = as.numeric(encLength),
+         duration = ifelse(grepl(":\\d+:", duration), duration, paste0("00:", duration)),
+         duration_seconds  = as.numeric(hms(duration))
+         )
+```
+
+The end result is a data frame with rows that look like this:
+
+```{r-df-rows}
+twiv_df %>%
+  top_n(5, wt = pubDate) %>%
+  kable()
+```
+
+# Is TWiV getting longer?
+Some time in 2016, I started to form the impression that most episodes of TWiV were around the two hour mark or more. Unfortunately, this prompted my decision to stop listening since I listen to several other podcasts and could not justify 2 hours each week for just one of them.
+
+## Scatter plot
+Let's start with a scatter plot.
+
+There's a clear increase in duration for the first 4 years of the podcast, which then levels off. There's also quite a lot of noise due to "outliers": special episodes that tend to be much shorter than average.
+
+```{r twiv-scatter}
+twiv_df %>% 
+  mutate(duration_minutes = duration_seconds/60) %>% 
+  ggplot(aes(pubDate, duration_minutes)) + 
+    geom_point() + 
+    geom_smooth() + 
+    labs(x = "Date", y = "Duration (minutes)", title = "This Week in Virology Episode Duration") + 
+    scale_x_datetime(date_breaks = "1 year", date_labels = "%Y")
+```
+
+## Summarise by year
+How about if we plot the mean episode duration by year?
+
+Mean duration passed 90 minutes in 2011 and approached 100 minutes in 2015. There is a very slight decrease in the mean duration in the episodes aired so far for 2017.
+
+```{r twiv-bar}
+twiv_df %>% 
+  mutate(duration_minutes = duration_seconds/60,
+         Year = year(pubDate)) %>%
+  group_by(Year) %>%
+  summarise(mean_duration = mean(duration_minutes, na.rm = TRUE)) %>%
+  ggplot(aes(Year, mean_duration)) + 
+    geom_col(fill = "skyblue3") + 
+    labs(x = "Year", y = "Mean duration (minutes)", title = "This Week in Virology Mean Episode Duration By Year") +
+    scale_x_continuous(breaks = 2008:2017)
+```
+
+## Distribution of duration
+The "ridge line" plot shows duration distributions by year.
+
+This clearly shows the duration creeping towards two hours in 2016, but dropping back a little in 2017.
+
+```{r twiv-joy}
+twiv_df %>% 
+  mutate(duration_minutes = duration_seconds/60,
+         Year = factor(year(pubDate), levels = 2017:2008)) %>%
+  filter(!is.na(duration_minutes)) %>%
+  ggplot(aes(x = duration_minutes, y = Year)) + 
+    geom_density_ridges() + 
+    theme_ridges() + 
+    labs(x = "Duration (minutes)", y = "Year", title = "This Week in Virology Episode Duration Distribution By Year") +
+    scale_x_continuous(breaks = seq(0, 150, 30))
+```
+
+# Conclusions
+TWiV duration moved to around 90 minutes on average in 2010 - 2011, then moved again closer to 100 - 120 minutes in 2015 - 2016. However, the duration seems to have dropped back a little in 2017.
+
+# Other ways to analyse the feed data
+## Keywords
+A word cloud of the podcast keywords. We remove stop words plus the words "virus", "viruses", "virology", "viral", "twiv".
+
+Keywords occurring 10 or more times:
+```{r twiv-wordcloud}
+data.frame(keywords = twiv %>% xml_nodes("itunes\\:keywords") %>% xml_text(), 
+           stringsAsFactors = FALSE) %>% 
+  unnest_tokens(words, keywords) %>% 
+  count(words) %>% 
+  filter(!words %in% c("virus", "viruses", "virology", "viral", "twiv", stop_words$word)) %>% 
+  with(wordcloud(words, n, min.freq = 10, random.order = FALSE, colors = brewer.pal(11, "Spectral")))
+```
