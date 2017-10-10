@@ -1,0 +1,2 @@
+*.Rmd linguist-language=R
+podcasts/twiv/code/R/*.html linguist-documentation
