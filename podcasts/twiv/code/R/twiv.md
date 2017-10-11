@@ -57,6 +57,14 @@ This clearly shows the duration creeping towards two hours in 2016, but dropping
 # Conclusions
 TWiV duration moved to around 90 minutes on average in 2010 - 2011, then moved again closer to 100 - 120 minutes in 2015 - 2016. However, the duration seems to have dropped back a little in 2017.
 
+How about some of the other Microbe TV podcasts?
+
+## This Week in Microbiology (TWiM)
+![](../../figures/twim-joy-1.png)<!-- -->
+
+## This Week in Parasitism (TWiP)
+![](../../figures/twip-joy-1.png)<!-- -->
+
 # Other ways to analyse the feed data
 ## Keywords
 A word cloud of the podcast keywords. We remove stop words plus the words "virus", "viruses", "virology", "viral", "twiv".
