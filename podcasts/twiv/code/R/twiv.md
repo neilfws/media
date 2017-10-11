@@ -10,8 +10,6 @@ Is science podcast [This Week In Virology](http://www.microbe.tv/twiv/) getting 
 # Get the XML
 Data for every podcast episode is contained in [the RSS feed](http://twiv.microbeworld.libsynpro.com/twiv). RSS is XML, so reading it into R is very easy. Details for each episode are found in the `item` nodes.
 
-
-
 # Make the data frame
 There is sure to be a clever and elegant way to map straight into a data frame using _e.g._ `purrr`. This is not that way.
 
