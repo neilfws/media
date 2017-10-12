@@ -115,7 +115,7 @@ twiv_df %>%
     geom_density_ridges() + 
     theme_ridges() + 
     labs(x = "Duration (minutes)", y = "Year", title = "This Week in Virology Episode Duration Distribution By Year") +
-    scale_x_continuous(breaks = seq(0, 150, 30))
+    scale_x_continuous(breaks = seq(0, 150, 30), limits = c(0, 150))
 ```
 
 # Conclusions
@@ -135,7 +135,7 @@ twim_df %>%
   geom_density_ridges() + 
   theme_ridges() + 
   labs(x = "Duration (minutes)", y = "Year", title = "This Week in Microbiology Episode Duration Distribution By Year") +
-  scale_x_continuous(breaks = seq(0, 150, 30))
+  scale_x_continuous(breaks = seq(0, 150, 30), limits = c(0, 150))
 ```
 
 ## This Week in Parasitism (TWiP)
@@ -150,7 +150,7 @@ twip_df %>%
   geom_density_ridges() + 
   theme_ridges() + 
   labs(x = "Duration (minutes)", y = "Year", title = "This Week in Parasitism Episode Duration Distribution By Year") +
-  scale_x_continuous(breaks = seq(0, 150, 30))
+  scale_x_continuous(breaks = seq(0, 150, 30), limits = c(0, 150))
 ```
 
 # Other ways to analyse the feed data
