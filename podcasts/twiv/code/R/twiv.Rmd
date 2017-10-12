@@ -124,33 +124,58 @@ TWiV duration moved to around 90 minutes on average in 2010 - 2011, then moved a
 How about some of the other Microbe TV podcasts?
 
 ## This Week in Microbiology (TWiM)
+Let's try comparing these in the same plot.
 ```{r twim-joy}
 twim_df <- feed_to_df("http://feeds.feedburner.com/twim?format=xml")
 
-twim_df %>% 
-  mutate(duration_minutes = duration_seconds/60,
-         Year = factor(year(pubDate), levels = 2017:2008)) %>%
-  filter(!is.na(duration_minutes)) %>%
+twiv_df %>% 
+  mutate(show = "This Week in Virology") %>% 
+  bind_rows(mutate(twim_df, show = "This Week in Microbiology")) %>% 
+  mutate(duration_minutes = duration_seconds/60, Year = factor(year(pubDate), levels = 2017:2008)) %>% 
+  filter(!is.na(duration_minutes)) %>% 
   ggplot(aes(x = duration_minutes, y = Year)) + 
-  geom_density_ridges() + 
-  theme_ridges() + 
-  labs(x = "Duration (minutes)", y = "Year", title = "This Week in Microbiology Episode Duration Distribution By Year") +
-  scale_x_continuous(breaks = seq(0, 150, 30), limits = c(0, 150))
+    geom_density_ridges(aes(fill = show)) + 
+    theme_ridges() + 
+    labs(x = "Duration (minutes)", y = "Year", title = "Episode Duration Distribution by Year") + 
+    scale_x_continuous(breaks = seq(0, 150, 30)) + 
+  scale_fill_manual(values = c("darkorange", "skyblue3"))
+```
+
+Side by side might be better?
+```{r twim-joy2}
+twiv_df %>% 
+  mutate(show = "This Week in Virology") %>% 
+  bind_rows(mutate(twim_df, show = "This Week in Microbiology")) %>% 
+  mutate(duration_minutes = duration_seconds/60, 
+         Year = factor(year(pubDate), levels = 2017:2008), 
+         show = factor(show, levels = c("This Week in Virology", "This Week in Microbiology"))) %>% 
+  filter(!is.na(duration_minutes)) %>% 
+  ggplot(aes(x = duration_minutes, y = Year)) + 
+    geom_density_ridges() + 
+    theme_ridges() + 
+    labs(x = "Duration (minutes)", y = "Year", title = "Episode Duration Distribution by Year") + 
+    scale_x_continuous(breaks = seq(0, 150, 30)) + 
+  facet_wrap(~show)
 ```
 
 ## This Week in Parasitism (TWiP)
+We'll try these side by side.
 ```{r twip-joy}
 twip_df <- feed_to_df("http://twip.microbeworld.libsynpro.com/rss")
 
-twip_df %>% 
-  mutate(duration_minutes = duration_seconds/60,
-         Year = factor(year(pubDate), levels = 2017:2008)) %>%
-  filter(!is.na(duration_minutes)) %>%
+twiv_df %>% 
+  mutate(show = "This Week in Virology") %>% 
+  bind_rows(mutate(twip_df, show = "This Week in Parasitology")) %>% 
+  mutate(duration_minutes = duration_seconds/60, 
+         Year = factor(year(pubDate), levels = 2017:2008), 
+         show = factor(show, levels = c("This Week in Virology", "This Week in Parasitology"))) %>% 
+  filter(!is.na(duration_minutes)) %>% 
   ggplot(aes(x = duration_minutes, y = Year)) + 
-  geom_density_ridges() + 
-  theme_ridges() + 
-  labs(x = "Duration (minutes)", y = "Year", title = "This Week in Parasitism Episode Duration Distribution By Year") +
-  scale_x_continuous(breaks = seq(0, 150, 30), limits = c(0, 150))
+    geom_density_ridges() + 
+    theme_ridges() + 
+    labs(x = "Duration (minutes)", y = "Year", title = "Episode Duration Distribution by Year") + 
+    scale_x_continuous(breaks = seq(0, 150, 30)) + 
+  facet_wrap(~show)
 ```
 
 # Other ways to analyse the feed data

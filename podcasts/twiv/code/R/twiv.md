@@ -60,9 +60,14 @@ TWiV duration moved to around 90 minutes on average in 2010 - 2011, then moved a
 How about some of the other Microbe TV podcasts?
 
 ## This Week in Microbiology (TWiM)
+Let's try comparing these in the same plot.
 ![](../../figures/twim-joy-1.png)<!-- -->
 
+Side by side might be better?
+![](../../figures/twim-joy2-1.png)<!-- -->
+
 ## This Week in Parasitism (TWiP)
+We'll try these side by side.
 ![](../../figures/twip-joy-1.png)<!-- -->
 
 # Other ways to analyse the feed data
