@@ -95,7 +95,7 @@ twiv_df %>%
   ggplot(aes(Year, mean_duration)) + 
     geom_col(fill = "skyblue3") + 
     labs(x = "Year", y = "Mean duration (minutes)", title = "This Week in Virology Mean Episode Duration By Year") +
-    scale_x_continuous(breaks = 2008:2017)
+    scale_x_continuous(breaks = 2008:2020)
 ```
 
 ## Distribution of duration
@@ -106,7 +106,7 @@ This clearly shows the duration creeping towards two hours in 2016, but dropping
 ```{r twiv-joy}
 twiv_df %>% 
   mutate(duration_minutes = duration_seconds/60,
-         Year = factor(year(pubDate), levels = 2017:2008)) %>%
+         Year = factor(year(pubDate), levels = 2020:2008)) %>%
   filter(!is.na(duration_minutes)) %>%
   ggplot(aes(x = duration_minutes, y = Year)) + 
     geom_density_ridges() + 
@@ -128,7 +128,7 @@ twim_df <- feed_to_df("http://feeds.feedburner.com/twim?format=xml")
 twiv_df %>% 
   mutate(show = "This Week in Virology") %>% 
   bind_rows(mutate(twim_df, show = "This Week in Microbiology")) %>% 
-  mutate(duration_minutes = duration_seconds/60, Year = factor(year(pubDate), levels = 2017:2008)) %>% 
+  mutate(duration_minutes = duration_seconds/60, Year = factor(year(pubDate), levels = 2020:2008)) %>% 
   filter(!is.na(duration_minutes)) %>% 
   ggplot(aes(x = duration_minutes, y = Year)) + 
     geom_density_ridges(aes(fill = show)) + 
@@ -144,7 +144,7 @@ twiv_df %>%
   mutate(show = "This Week in Virology") %>% 
   bind_rows(mutate(twim_df, show = "This Week in Microbiology")) %>% 
   mutate(duration_minutes = duration_seconds/60, 
-         Year = factor(year(pubDate), levels = 2017:2008), 
+         Year = factor(year(pubDate), levels = 2020:2008), 
          show = factor(show, levels = c("This Week in Virology", "This Week in Microbiology"))) %>% 
   filter(!is.na(duration_minutes)) %>% 
   ggplot(aes(x = duration_minutes, y = Year)) + 
@@ -164,7 +164,7 @@ twiv_df %>%
   mutate(show = "This Week in Virology") %>% 
   bind_rows(mutate(twip_df, show = "This Week in Parasitology")) %>% 
   mutate(duration_minutes = duration_seconds/60, 
-         Year = factor(year(pubDate), levels = 2017:2008), 
+         Year = factor(year(pubDate), levels = 2020:2008), 
          show = factor(show, levels = c("This Week in Virology", "This Week in Parasitology"))) %>% 
   filter(!is.na(duration_minutes)) %>% 
   ggplot(aes(x = duration_minutes, y = Year)) + 
