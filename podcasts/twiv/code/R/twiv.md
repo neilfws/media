@@ -1,6 +1,7 @@
 Is TWiV getting longer?
 ================
 Neil Saunders
+<<<<<<< HEAD
 compiled 2021-09-01 20:11:03
 
 -   [Introduction](#introduction)
@@ -17,6 +18,24 @@ compiled 2021-09-01 20:11:03
 -   [Other ways to analyse the feed
     data](#other-ways-to-analyse-the-feed-data)
     -   [Keywords](#keywords)
+=======
+compiled 2020-03-18 15:24:06
+
+  - [Introduction](#introduction)
+  - [Get the XML](#get-the-xml)
+  - [Make the data frame](#make-the-data-frame)
+  - [Is TWiV getting longer?](#is-twiv-getting-longer)
+      - [Scatter plot](#scatter-plot)
+      - [Summarise by year](#summarise-by-year)
+      - [Distribution of duration](#distribution-of-duration)
+  - [Conclusions](#conclusions)
+      - [This Week in Microbiology
+        (TWiM)](#this-week-in-microbiology-twim)
+      - [This Week in Parasitism (TWiP)](#this-week-in-parasitism-twip)
+  - [Other ways to analyse the feed
+    data](#other-ways-to-analyse-the-feed-data)
+      - [Keywords](#keywords)
+>>>>>>> 0ed96ed2937f99411007b5710993c6e3f2527e01
 
 # Introduction
 
@@ -35,9 +54,15 @@ the `item` nodes.
 There is sure to be a clever and elegant way to map straight into a data
 frame using *e.g.* `purrr`. This is not that way.
 
+<<<<<<< HEAD
 -   `pubDate` is converted to date-time
 -   `enclosure length` (bytes) is converted to numeric values
 -   `duration` is pre-pended with “00” where hours are absent, then
+=======
+  - `pubDate` is converted to date-time
+  - `enclosure length` (bytes) is converted to numeric values
+  - `duration` is pre-pended with “00” where hours are absent, then
+>>>>>>> 0ed96ed2937f99411007b5710993c6e3f2527e01
     converted to seconds as numeric values
 
 The end result is a data frame with rows that look like this:
