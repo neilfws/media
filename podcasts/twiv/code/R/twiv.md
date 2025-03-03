@@ -1,22 +1,21 @@
 Is TWiV getting longer?
 ================
 Neil Saunders
-compiled 2021-09-01 20:19:31
+compiled 2025-03-03 14:00:24.916758
 
--   [Introduction](#introduction)
--   [Get the XML](#get-the-xml)
--   [Make the data frame](#make-the-data-frame)
--   [Is TWiV getting longer?](#is-twiv-getting-longer)
-    -   [Scatter plot](#scatter-plot)
-    -   [Summarise by year](#summarise-by-year)
-    -   [Distribution of duration](#distribution-of-duration)
--   [Conclusions](#conclusions)
-    -   [This Week in Microbiology
-        (TWiM)](#this-week-in-microbiology-twim)
-    -   [This Week in Parasitism (TWiP)](#this-week-in-parasitism-twip)
--   [Other ways to analyse the feed
-    data](#other-ways-to-analyse-the-feed-data)
-    -   [Keywords](#keywords)
+- [Introduction](#introduction)
+- [Get the XML](#get-the-xml)
+- [Make the data frame](#make-the-data-frame)
+- [Is TWiV getting longer?](#is-twiv-getting-longer)
+  - [Scatter plot](#scatter-plot)
+  - [Summarise by year](#summarise-by-year)
+  - [Distribution of duration](#distribution-of-duration)
+- [Conclusions](#conclusions)
+  - [This Week in Microbiology (TWiM)](#this-week-in-microbiology-twim)
+  - [This Week in Parasitism (TWiP)](#this-week-in-parasitism-twip)
+- [Other ways to analyse the feed
+  data](#other-ways-to-analyse-the-feed-data)
+  - [Keywords](#keywords)
 
 # Introduction
 
@@ -35,18 +34,14 @@ the `item` nodes.
 There is sure to be a clever and elegant way to map straight into a data
 frame using *e.g.* `purrr`. This is not that way.
 
--   `pubDate` is converted to date-time
--   `enclosure length` (bytes) is converted to numeric values
--   `duration` is pre-pended with “00” where hours are absent, then
-    converted to seconds as numeric values
+- `pubDate` is converted to date-time
+- `enclosure length` (bytes) is converted to numeric values
+- `duration` is pre-pended with “00” where hours are absent, then
+  converted to seconds as numeric values
 
 The end result is a data frame with rows that look like this:
 
-``` {r-df-rows}
-twiv_df %>%
-  top_n(5, wt = pubDate) %>%
-  kable()
-```
+`{r-df-rows} twiv_df %>%   top_n(5, wt = pubDate) %>%   kable()`
 
 # Is TWiV getting longer?
 
